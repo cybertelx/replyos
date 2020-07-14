@@ -64,4 +64,5 @@ module.exports = async (client, reaction, user) => {
     } else {
         info(client,reaction,user)
     }
+
 }
