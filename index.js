@@ -11,9 +11,6 @@ const http = require('http');
 // we've started you off with Express, 
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
-
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
   
@@ -21,11 +18,6 @@ app.get('/', function(request, response) {
   
   response.sendStatus(200);
 });
-
-
-// make all the files in 'public' available
-// https://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, () => {
