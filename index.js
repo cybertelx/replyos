@@ -31,7 +31,7 @@ const listener = app.listen(process.env.PORT, () => {
 // Discord.JS
 
 const client = new Client({
-  partials: ["MESSAGE", "CHANNEL", "REACTION"]
+  partials: ["MESSAGE", "REACTION"]
 });
 const config = require("./config.json");
 const token = process.env.SECRET;
@@ -44,7 +44,7 @@ client.on("ready", () => {
   client.user
     .setPresence({
       activity: {
-        name: "ros/help",
+        name: "you write ros/help",
         type: "WATCHING"
       },
       status: "online"
