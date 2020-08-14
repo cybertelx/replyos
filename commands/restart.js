@@ -7,14 +7,14 @@ let news = [
   "world erupts into chaos",
   "developer fired",
   "discord bankrupts",
-  "karens complain"
+  "insert bad thing"
 ];
 
 let random = function(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (max - min)) + min;
 };
 
-exports.run = (client, message, [id, ...msg]) => {
+exports.run = async (client, message, [id, ...msg]) => {
   if (message.partial === true) { return }
   
   let embed;
@@ -44,6 +44,11 @@ exports.run = (client, message, [id, ...msg]) => {
         `ReplyOS by ${client.config.creatorname}`,
         "https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
       );
+    await message.author.send(embed);
+
+    // Throw an error to restart ReplyOS
+
+    throw "Restarted by creator"
   } else {
     embed = new Discord.MessageEmbed()
       .setColor("#0099ff")
@@ -69,7 +74,7 @@ exports.run = (client, message, [id, ...msg]) => {
         `ReplyOS by ${client.config.creatorname}`,
         "https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
       );
+    message.author.send(embed);
   }
-  message.author.send(embed);
   
 };
