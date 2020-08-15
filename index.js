@@ -28,11 +28,18 @@ const listener = app.listen(process.env.PORT, () => {
   );
 });
 
-// Discord.JS
+// commando
 
-const client = new Client({
+const { CommandoClient } = require('discord.js-commando');
+const path = require('path');
+
+const client = new CommandoClient({
+	commandPrefix: 'ros/',
+	owner: '293826314807410690',
+	invite: undefined,
   partials: ["MESSAGE", "REACTION"]
 });
+
 const config = require("./config.json");
 const token = process.env.SECRET;
 const fs = require("fs");
@@ -88,19 +95,15 @@ fs.readdir("./events/", (err, files) => {
   });
 });
 
-fs.readdir("./commands/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach(file => {
-    if (!file.endsWith(".js")) return;
-    let props = require(`./commands/${file}`);
-    let commandName = file.split(".")[0];
-    if (client.config.logging == true) {
-      console.log(
-        `${client.config.log_name} Loading command ${config.prefix}${commandName}.`
-      );
-    }
-    client.commands[commandName] = props;
-  });
-});
+client.registry
+	.registerDefaultTypes()
+	.registerGroups([
+		['reply', 'ReplyOS'],
+    ['misc', 'Miscellaneous'],
+	])
+	.registerDefaultGroups()
+	.registerDefaultCommands()
+	.registerCommandsIn(path.join(__dirname, 'commands'));
 
-client.login(token);
+  
+client.login(process.env.SECRET);

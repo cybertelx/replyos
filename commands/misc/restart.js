@@ -1,6 +1,7 @@
 // Reply
 
 let Discord = require("discord.js");
+const { Command } = require('discord.js-commando');
 
 let news = [
   "yay",
@@ -14,12 +15,19 @@ let random = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-exports.run = async (client, message, [id, ...msg]) => {
-  if (message.partial === true) { return }
-  
-  let embed;
-  
-  if (message.author.id == client.config.creator) {
+module.exports = class StopCommand extends Command {
+	constructor(client) {
+		super(client, {
+			name: 'restart',
+			aliases: ['stop', 'shutdown'],
+			group: 'misc',
+			memberName: 'restart',
+			description: 'Replies with the text you provide.',
+      ownerOnly: true
+		});
+	}
+
+	async run(message) {
     embed = new Discord.MessageEmbed()
       .setColor("#0099ff")
       .setTitle("News Update:")
@@ -46,35 +54,6 @@ exports.run = async (client, message, [id, ...msg]) => {
       );
     await message.author.send(embed);
 
-    // Throw an error to restart ReplyOS
 
-    throw "Restarted by creator"
-  } else {
-    embed = new Discord.MessageEmbed()
-      .setColor("#0099ff")
-      .setTitle("News Update:")
-      .setDescription(
-        "BREAKING NEWS: you're not the owner, dummy"
-      )
-      .setThumbnail(
-        "https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
-      )
-      .addFields({
-        name: "Access denied.",
-        value:
-          "You can't restart it! You're not the creator!",
-        inline: false
-      },
-      )
-      .setImage(
-        "https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
-      )
-      .setTimestamp()
-      .setFooter(
-        `ReplyOS by ${client.config.creatorname}`,
-        "https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
-      );
-    message.author.send(embed);
-  }
-  
+	}
 };

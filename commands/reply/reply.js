@@ -1,5 +1,6 @@
 // Reply
 let Discord = require("discord.js");
+const { Command } = require('discord.js-commando');
 
 let news = [
 	"biggest economic depression since 1929",
@@ -18,10 +19,35 @@ let random = function(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 };
 
-exports.run = async (client, message, [id, ...msg]) => {
+module.exports = class ReplyCommand extends Command {
+	constructor(client) {
+		super(client, {
+			name: 'reply',
+			group: 'reply',
+			memberName: 'reply',
+			description: 'Reply to a user.',
+      guildOnly: true,
+      throttling: {
+	    	usages: 2,
+		    duration: 60,
+	    },
+      args: [
+        {
+	    		key: 'id',
+		    	prompt: 'Who do you want to reply to?',
+		    	type: 'string',
+        },
+        {
+	    		key: 'msg',
+		    	prompt: 'What do you want to say?',
+		    	type: 'string',
+        }
+      ],
+		});
+	}
 
-	try {
-		// ********************
+	async run(message, { id, msg }) {
+    // ********************
 		// FUNCTIONS TO BE USED IN OTHER PARTS OF THIS COMMAND
 		// ********************
 
@@ -47,7 +73,7 @@ exports.run = async (client, message, [id, ...msg]) => {
 				)
 				.setTimestamp()
 				.setFooter(
-					`ReplyOS by ${client.config.creatorname}`,
+					`ReplyOS by ${this.client.config.creatorname}`,
 					"https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
 				);
 			message.channel.send(errorEmbed);
@@ -76,9 +102,7 @@ exports.run = async (client, message, [id, ...msg]) => {
 			return embed.fields[1].value
 		}
 
-		// Turn msg into a string
-		msg = msg.join(" ")
-
+		try {
 		// ********************
 		// DETECT PARAM ISSUES AND OTHER STUFF
 		// ********************
@@ -108,7 +132,7 @@ exports.run = async (client, message, [id, ...msg]) => {
 
 
 		let fetchmessage = await message.channel.messages.fetch(id, false)
-		console.log(fetchmessage);
+		//console.log(fetchmessage);
 
 		let isrosreply = detectROSreply(fetchmessage)
 
@@ -151,7 +175,7 @@ exports.run = async (client, message, [id, ...msg]) => {
 			)
 			.setTimestamp()
 			.setFooter(
-				`ReplyOS by ${client.config.creatorname}`,
+				`ReplyOS by ${this.client.config.creatorname}`,
 				"https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
 			);
 		message.channel.send(replyembed);
@@ -166,9 +190,9 @@ exports.run = async (client, message, [id, ...msg]) => {
 		// 1. Get ID from mention
 		// 2. Get user from ID
 		let authorid = authorMention.replace(/[\\<>@#&!]/g, "");
-		let author = await client.users.fetch(authorid);
+		let author = await this.client.users.fetch(authorid);
 
-		console.log(author)
+		//console.log(author)
 
 		let embed = new Discord.MessageEmbed()
 			.setColor("#0099ff")
@@ -193,7 +217,7 @@ exports.run = async (client, message, [id, ...msg]) => {
 			)
 			.setTimestamp()
 			.setFooter(
-				`ReplyOS by ${client.config.creatorname}`,
+				`ReplyOS by ${this.client.config.creatorname}`,
 				"https://cdn.glitch.com/bee3051e-6091-4e60-a089-1742ec8d31c7%2Fros-logo-white-cropped.png"
 			)
 
@@ -202,6 +226,7 @@ exports.run = async (client, message, [id, ...msg]) => {
 	} catch(e) {
     error()
 
-    // console.log(e) // DEBUG
+    //console.log(e) // DEBUG
   }
+	}
 };
